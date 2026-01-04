@@ -1,0 +1,94 @@
+/dts-v1/;
+/*
+ * 当前系统运行的 IMX415 设备树配置
+ * 导出时间: 2024-12-24
+ * 导出源: /proc/device-tree/i2c@feab0000/imx415@37
+ * 
+ * 使用 dtc 从运行时设备树导出
+ */
+
+&i2c3 {
+	/* I2C 总线地址: 0xfeab0000 */
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+	compatible = "rockchip,rk3588-i2c", "rockchip,rk3399-i2c";
+
+	/*
+	 * IMX415 摄像头传感器配置
+	 * I2C 地址: 0x37
+	 */
+	imx415@37 {
+		compatible = "sony,imx415";
+		status = "okay";
+		reg = <0x37>;  /* I2C address 0x37 */
+
+		/* 时钟配置 */
+		clocks = <&cru CLK_MIPI_CAMARAOUT_M3>;
+		clock-names = "xvclk";
+
+		/* Pin control 配置 */
+		pinctrl-names = "default";
+		pinctrl-0 = <&mipim0_camera3_clk>;
+
+		/* 电源域 */
+		power-domains = <&power RK3588_PD_VI>;
+
+		/* GPIO 配置 */
+		reset-gpios = <&gpio3 RK_PC4 GPIO_ACTIVE_LOW>;   /* GPIO3_C4, ACTIVE_LOW */
+		power-gpios = <&gpio3 RK_PC6 GPIO_ACTIVE_HIGH>;  /* GPIO3_C6, ACTIVE_HIGH */
+
+		/* Rockchip 摄像头模块属性 */
+		rockchip,camera-module-index = <0>;
+		rockchip,camera-module-facing = "back";
+		rockchip,camera-module-name = "CMK-OT2022-PX1";
+		rockchip,camera-module-lens-name = "IR0147-50IRC-8M-F20";
+
+		/* MIPI CSI-2 端口配置 */
+		port {
+			endpoint {
+				/* 4-lane MIPI CSI-2 */
+				data-lanes = <1 2 3 4>;
+				/* 连接到 csi2-dphy0 的 mipi_in_ucam0 */
+				remote-endpoint = <&mipi_in_ucam0>;
+				/* 
+				 * 注意: 设备树中没有配置 link-frequencies 属性
+				 * 驱动代码中定义的频率:
+				 *   - 297 MHz (索引 0)
+				 *   - 446 MHz (索引 1)
+				 *   - 743 MHz (索引 2)
+				 *   - 891 MHz (索引 3)
+				 * 当前模式使用索引值，具体由驱动根据模式选择
+				 */
+			};
+		};
+	};
+};
+
+/*
+ * CSI2-DPHY0 配置 (连接到 IMX415)
+ * 注意: 此部分需要从 /proc/device-tree/csi2-dphy0 导出
+ * 这里仅作为参考，实际配置在系统设备树的其他位置
+ */
+&csi2_dphy0 {
+	status = "okay";
+	ports {
+		port@0 {
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			mipi_in_ucam0: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&imx415_out>;
+				data-lanes = <1 2 3 4>;
+				/* 
+				 * 如果需要在设备树中指定 link-frequencies，
+				 * 可以在此处添加:
+				 * link-frequencies = <297000000 446000000 743000000 891000000>;
+				 */
+			};
+		};
+	};
+};
+

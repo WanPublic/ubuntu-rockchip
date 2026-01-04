@@ -25,10 +25,7 @@ Optional arguments:
 HEREDOC
 }
 
-if [ "$(id -u)" -ne 0 ]; then 
-    echo "Please run as root"
-    exit 1
-fi
+
 
 cd "$(dirname -- "$(readlink -f -- "$0")")"
 

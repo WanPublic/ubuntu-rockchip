@@ -19,9 +19,11 @@ fi
 # shellcheck source=/dev/null
 source "../config/suites/${SUITE}.sh"
 
-# Clone the kernel repo
-if ! git -C linux-rockchip pull; then
+# Clone the kernel repo if not exists, skip pull to preserve local changes
+if [ ! -d linux-rockchip ]; then
     git clone --progress -b "${KERNEL_BRANCH}" "${KERNEL_REPO}" linux-rockchip --depth=2
+else
+    echo "Using existing linux-rockchip directory, skipping clone/pull"
 fi
 
 cd linux-rockchip
