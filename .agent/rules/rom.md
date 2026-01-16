@@ -10,5 +10,6 @@ trigger: always_on
 6. 每次编译新的分支都要修改noble.sh
 7. 编译前提交commit到分支 并使用脚本编译 sudo ./build.sh --board=orangepi-5-plus --suite=noble --kernel-only
 8. 使用中文反馈，使用中文展示thought
-9. 工具层分支一直在orange-pi-5-plus-imx415-90fps下操作
+9. 工具层（本项目）分支一直在orange-pi-5-plus-imx415-90fps下操作
 10. 代码修改都要加入注释，老的注释要读取并修改，用注释记录修改历史
+11. 内核层源码https://github.com/WanPublic/linux-rockchip/，根据需要再切换分支
