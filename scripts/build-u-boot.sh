@@ -33,6 +33,8 @@ fi
 
 # Compile u-boot into a deb package
 dpkg-source --before-build .
+# 2026-01-16: 启用 ccache 优化编译速度
+export CC="ccache aarch64-linux-gnu-gcc"
 dpkg-buildpackage -a "$(cat debian/arch)" -d -b -nc -uc --rules-target="${rules}"
 dpkg-source --after-build .
 

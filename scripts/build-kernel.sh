@@ -31,8 +31,9 @@ git checkout "${KERNEL_BRANCH}"
 
 # shellcheck disable=SC2046
 export $(dpkg-architecture -aarm64)
+# 2026-01-16: 启用 ccache 优化编译速度
 export CROSS_COMPILE=aarch64-linux-gnu-
-export CC=aarch64-linux-gnu-gcc
+export CC="ccache aarch64-linux-gnu-gcc"
 export LANG=C
 
 # Compile the kernel into a deb package
