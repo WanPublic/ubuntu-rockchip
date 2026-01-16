@@ -3,79 +3,66 @@
  * CSI-2_4lane 
  * 37.125MHz INCK (Input Clock)
  * AD:10bit 
- * Output:10bit 
+ * Output:12bit 
  * 1782Mbps/lane
  * Master Mode 
- * 90fps 
+ * 90.011fps 
  * 1H period: 365 clocks
- * VMAX: 2238 lines (0x8BE)
- * Based on: IMX415-AAQR-C.PDF Register Setting Table
- * 2026-01-16: Initial version for 1080P 90fps @ 37.125MHz INCK
+ * VMAX: 2260 lines (0x8D4)
+ * Based on: sunnic_IMX415_RegisterSetting_Ver10.0_20240925_No1.ism
+ * 2026-01-17: Updated to match ISM specific PLL and VMAX settings
  */
 static __maybe_unused const struct regval imx415_linear_10bit_1080p90fps_1782M_regs[] = {
 	// ===== 基本控制寄存器 =====
 	{0x3002, 0x00},	// XMSTA - Master mode start register
 	
-	{0x3008, 0x7F}, // BCWAIT_TIME[7:0] - Black clamp wait time
-	                // PDF P78 (1782Mbps): 37.125MHz=07Fh
-	
-	{0x300A, 0x5B},	// CPWAIT_TIME[7:0] - Charge pump wait time
-	                // PDF P78 (1782Mbps): 37.125MHz=05Bh
+	{0x3008, 0x7F}, // BCWAIT_TIME[7:0] - ISM: 0x7F
+	{0x300A, 0x5B},	// CPWAIT_TIME[7:0] - ISM: 0x5B
 	
 	// ===== 图像模式设置 (2/2-line binning) =====
-	{0x301C, 0x00},	// WINMODE - 0: All-pixel / Binning (refer to binning regs)
-	
-	{0x3020, 0x01}, // HADD - Horizontal 2 binning
-	                // PDF P??: Binning mode requires this set to 1
-	
-	{0x3021, 0x01}, // VADD - Vertical 2 binning
-	                // PDF P??: Binning mode requires this set to 1
-	
-	{0x3022, 0x01}, // ADDMODE - H/V 2/2-line binning
-	                // PDF P??: 1h = Binning mode
+	{0x301C, 0x00},	// WINMODE
+	{0x3020, 0x01}, // HADD - ISM: 0x01
+	{0x3021, 0x01}, // VADD - ISM: 0x01
+	{0x3022, 0x01}, // ADDMODE - ISM: 0x01
 	
 	// ===== 帧时序参数 (1080P 90fps) =====
-	{0x3024, 0xBE}, // VMAX[7:0] - Vertical max period
-	{0x3025, 0x08}, // VMAX[15:8]
+	{0x3024, 0xD4}, // VMAX[7:0] - ISM: 0xD4 (Total 0x8D4 = 2260 lines)
+	{0x3025, 0x08}, // VMAX[15:8] - ISM: 0x08
 	{0x3026, 0x00}, // VMAX[19:16]
-	                // PDF Step 35: 90.9fps 2/2-binning -> 1V=2238 (0x08BE)
 	
-	{0x3028, 0x6D}, // HMAX[7:0] - Horizontal max period
+	{0x3028, 0x6D}, // HMAX[7:0] - ISM: 0x6D (Total 0x16D = 365)
 	{0x3029, 0x01}, // HMAX[15:8]
-	                // PDF Step 35: 90.9fps 2/2-binning -> 1H=365 (0x016D)
 	
-	{0x3030, 0x00},	// HREVERSE=0, VREVERSE=0 (Normal)
+	{0x3030, 0x00},	// HREVERSE=0, VREVERSE=0
 	
 	// ===== 数据位宽设置 =====
-	{0x3031, 0x00},	// ADBIT - 0: 10bit
-	{0x3032, 0x00},	// MDBIT - 0: 10bit output
+	{0x3031, 0x00},	// ADBIT - ISM: 0x00 (10bit)
+	{0x3032, 0x01},	// MDBIT - ISM: 0x01 (12bit output)
 	
-	{0x3033, 0x04},	// SYS_MODE - 4: 1782Mbps mode
-	                // PDF P54: 4h = 1782Mbps
+	{0x3033, 0x04},	// SYS_MODE - ISM: 0x04 (1782Mbps)
+	
+	// ===== Binning模式专用寄存器 =====
+	{0x30D9, 0x02}, // DIG_CLP_VST_AET - ISM: 0x02
+	{0x30DA, 0x01}, // DIG_VLP_VNUM - ISM: 0x01
 	
 	// ===== 曝光/增益 =====
 	{0x3050, 0x08},	// SHR0[7:0]
 	{0x3090, 0x14},	// GAIN_PCG_0
 	
-	// ===== PLL/时钟配置 (1782Mbps @ 37.125MHz INCK) =====
-	// Refer to PDF P78 "Data rate: 1782Mbps / lane"
+	// ===== PLL/时钟配置 (Based on ISM) =====
 	{0x3115, 0x00}, // INCKSEL1
 	
-	{0x3116, 0x23},	// INCKSEL2
-	                // PDF P78: 37.125MHz=23h
+	{0x3116, 0x24},	// INCKSEL2 - ISM: 0x24 (Differs from PDF 0x23)
 	
-	{0x3118, 0xC6}, // INCKSEL3[7:0]
+	{0x3118, 0xC0}, // INCKSEL3[7:0] - ISM: 0xC0 (Differs from PDF 0xC6)
 	{0x3119, 0x00}, // INCKSEL3[10:8]
-	                // PDF P78: 37.125MHz=0C6h
 	
-	{0x311A, 0xE7}, // INCKSEL4[7:0]
+	{0x311A, 0xE0}, // INCKSEL4[7:0] - ISM: 0xE0 (Differs from PDF 0xE7)
 	{0x311B, 0x00}, // INCKSEL4[10:8]
-	                // PDF P78: 37.125MHz=0E7h
 	
-	{0x311E, 0x23},	// INCKSEL5
-	                // PDF P78: 37.125MHz=23h
+	{0x311E, 0x24},	// INCKSEL5 - ISM: 0x24 (Differs from PDF 0x23)
 	
-	// ===== 0x3200-0x3BFF 范围寄存器 (Common) =====
+	// ===== 0x3200-0x3BFF 范围寄存器 (ISM/PDF Common) =====
 	{0x32D4, 0x21},
 	{0x32EC, 0xA1},
 	{0x344C, 0x2B},
@@ -180,50 +167,40 @@ static __maybe_unused const struct regval imx415_linear_10bit_1080p90fps_1782M_r
 	// ===== MIPI CSI-2 接口配置 =====
 	{0x4001, 0x03}, // LANEMODE - 4-lane
 	
-	{0x4004, 0xC0},	// TXCLKESC_FREQ[7:0]
-	{0x4005, 0x06},	// TXCLKESC_FREQ[15:8]
-	                // PDF P78 (1782Mbps): 37.125MHz=06C0h (1728 decimal)
+	{0x4004, 0x48},	// TXCLKESC_FREQ[7:0] - ISM: 0x48
+	{0x4005, 0x09},	// TXCLKESC_FREQ[15:8] - ISM: 0x09 (Total 0x0948 -> Differs from PDF 0x06C0)
 	
 	{0x400C, 0x01}, // INCKSEL6
 	
 	// ===== MIPI D-PHY 时序参数 (1782Mbps Global Timing) =====
-	// PDF Step 39/49 column for 1782Mbps
+	// PDF Step 39/49 column for 1782Mbps (ISM文件未包含这些，保留PDF建议值以确保稳定)
 	
 	{0x4018, 0xB7}, // TCLKPOST[7:0]
 	{0x4019, 0x00}, // TCLKPOST[15:8]
-	                // PDF 1782Mbps: 00B7h
 	
 	{0x401A, 0x67}, // TCLKPREPARE[7:0]
 	{0x401B, 0x00}, // TCLKPREPARE[15:8]
-	                // PDF 1782Mbps: 0067h
 	
 	{0x401C, 0x6F}, // TCLKTRAIL[7:0]
 	{0x401D, 0x00}, // TCLKTRAIL[15:8]
-	                // PDF 1782Mbps: 006Fh
 	
 	{0x401E, 0xDF}, // TCLKZERO[7:0]
 	{0x401F, 0x01}, // TCLKZERO[15:8]
-	                // PDF 1782Mbps: 01DFh
 	
 	{0x4020, 0x6F}, // THSPREPARE[7:0]
 	{0x4021, 0x00}, // THSPREPARE[15:8]
-	                // PDF 1782Mbps: 006Fh
 	
 	{0x4022, 0xCF}, // THSZERO[7:0]
 	{0x4023, 0x00}, // THSZERO[15:8]
-	                // PDF 1782Mbps: 00CFh
 	
 	{0x4024, 0x6F}, // THSTRAIL[7:0]
 	{0x4025, 0x00}, // THSTRAIL[15:8]
-	                // PDF 1782Mbps: 006Fh
 	
 	{0x4026, 0xB7}, // THSEXIT[7:0]
 	{0x4027, 0x00}, // THSEXIT[15:8]
-	                // PDF 1782Mbps: 00B7h
 	
 	{0x4028, 0x5F}, // TLPX[7:0]
 	{0x4029, 0x00}, // TLPX[15:8]
-	                // PDF 1782Mbps: 005Fh
 	
 	{0x4074, 0x00}, // INCKSEL7
 	
