@@ -8,7 +8,7 @@ export RELASE_VERSION="24.04"
 # 2026-01-16: 切换到 orange-pi-5-plus-imx415-4k-90fps-singleisp 分支进行 4K 90fps 开发
 # 2026-01-16: 切换到 orange-pi-5-plus-imx415-4k-90fps-dualisp 分支进行 4K 90fps dual isp 开发
 export KERNEL_REPO="https://github.com/WanPublic/linux-rockchip.git"
-# 2026-01-16: 切换回 orange-pi-5-plus-imx415-4k-90fps-singleisp 分支
+# 2026-01-17: 切换到 orange-pi-5-plus-imx415-4k-90fps-singleisp 分支进行内核编译
 export KERNEL_BRANCH="orange-pi-5-plus-imx415-4k-90fps-singleisp"
 export KERNEL_FLAVOR="rockchip"
 
