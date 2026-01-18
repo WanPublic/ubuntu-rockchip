@@ -19,8 +19,9 @@ fi
 # shellcheck source=/dev/null
 source "../config/suites/${SUITE}.sh"
 
-# Clone the kernel repo
-if ! git -C linux-rockchip pull; then
+# Clone or update the kernel repo
+# 2025-01-18: Improved repo handling to avoid clone errors if directory exists - Antigravity
+if [ ! -d linux-rockchip ]; then
     git clone --progress -b "${KERNEL_BRANCH}" "${KERNEL_REPO}" linux-rockchip --depth=2
 fi
 
