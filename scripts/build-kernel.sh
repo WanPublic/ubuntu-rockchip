@@ -29,8 +29,9 @@ git checkout "${KERNEL_BRANCH}"
 
 # shellcheck disable=SC2046
 export $(dpkg-architecture -aarm64)
-export CROSS_COMPILE=aarch64-linux-gnu-
-export CC=aarch64-linux-gnu-gcc
+# 2025-01-18: Added ccache support for faster builds - Antigravity
+export CROSS_COMPILE="ccache aarch64-linux-gnu-"
+export CC="ccache aarch64-linux-gnu-gcc"
 export LANG=C
 
 # Compile the kernel into a deb package
