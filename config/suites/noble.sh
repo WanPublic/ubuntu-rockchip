@@ -3,6 +3,7 @@
 export RELASE_NAME="Ubuntu 24.04 LTS (Noble Nombat)"
 export RELASE_VERSION="24.04"
 
+# 2026-01-27: Added 1920x1080 @ 90fps as default mode - WanPublic
 # 2026-01-26: Activate IMX415 support with default framerate - Antigravity
 # 2026-01-26: Updated kernel branch to rock-5b-plus-imx415-1080p-90fps-singleisp - Antigravity
 # 2026-01-26: Updated kernel branch to rock-5b-plus-imx415-4k-90fps-dualisp - Antigravity
