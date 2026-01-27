@@ -1,0 +1,38 @@
+---
+description: 
+alwaysApply: true
+---
+
+# ROM 构建与开发规范
+
+## 环境与账号
+
+- **本机（编译机）**：Ubuntu 24.04 x86，用户 `wanpublic`，密码与 sudo 密码均为 `wanpublic2025`
+- **目标机**：`10.5.0.127`，Rock 5B Plus，Ubuntu 24.04，账号密码同本机
+
+## 构建范围与流程
+
+- 仅编译 **Rock 5B Plus** + **Ubuntu 24.04 Noble**
+- 工具层始终在分支 **`rock-5b-plus-imx415-90fps`** 下操作
+- 内核源码：<https://github.com/WanPublic/linux-rockchip/>，按需切换分支
+- **不要写新脚本**：直接改文件、直接终端执行命令
+
+## 编译前
+
+1. 每次切到新分支编译前，必须修改 **`config/suites/noble.sh`**
+2. 先 **commit 到当前分支**，再执行编译：
+   ```bash
+   sudo ./build.sh --board=rock-5b-plus --suite=noble --kernel-only
+   ```
+3. **命令行运行直接在 bash 中运行并监控**：所有命令（如编译）直接在终端中执行并实时监控输出，例如编译命令直接在命令行中运行 `sudo ./build.sh --board=rock-5b-plus --suite=noble --kernel-only`
+
+
+
+## 编译后清单（按顺序执行）
+
+1. 将构建产物 **安装到目标机** `10.5.0.127`
+2. **重启目标机**，等待约 **30 秒**
+3. **验证摄像头是否正常启动**
+4. 若摄像头正常 → **测试实际帧率**
+5. 若摄像头正常 → **说明 ISP 处理链路与预览地址**
+6. 在 **`DISPLAY=:0`** 上启动视频预览
