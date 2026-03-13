@@ -9,7 +9,7 @@ export RELASE_VERSION="24.04"
 # 2026-01-16: 切换到 orange-pi-5-plus-imx415-4k-90fps-dualisp 分支进行 4K 90fps dual isp 开发
 export KERNEL_REPO="https://github.com/WanPublic/linux-rockchip.git"
 # 2026-01-17: 切换到 orange-pi-5-plus-imx415-4k-90fps-singleisp 分支进行内核编译
-# 2026-01-30: 切换到 orange-pi-5-plus-imx415-1080P-90ps-singleisp 分支进行 1080p 90fps 编译测试
+# 2026-01-30: 手动修改 rk3588-orangepi-5-plus-camera1.dtsi 重新编译一版
 export KERNEL_BRANCH="orange-pi-5-plus-imx415-1080P-90ps-singleisp"
 export KERNEL_FLAVOR="rockchip"
 
