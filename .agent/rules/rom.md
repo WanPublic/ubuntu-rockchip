@@ -1,5 +1,5 @@
 ---
-trigger: always_on
+# 2026-04-20: 新增 orangepi-5-pro 专用规则后，当前 plus 规则改为非自动触发（禁用老规则）。
 ---
 
 1. 每次对话 use context7

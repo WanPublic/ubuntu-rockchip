@@ -1,0 +1,32 @@
+---
+description: ROM 构建与开发规范（Orange Pi 5 Pro / Noble）
+alwaysApply: true
+---
+
+# ROM 构建与开发规范
+
+## 环境与账号
+
+- **本机（编译机）**：Ubuntu 24.04 x86，用户 `wanpublic`，密码与 sudo 密码均为 `wanpublic2025`
+- **目标机**：`10.5.0.141`，Orange Pi 5 Pro，Ubuntu 24.04，账号密码同本机
+
+## 构建范围与流程
+
+- 仅编译 **Orange Pi 5 Pro** + **Ubuntu 24.04 Noble**
+- 工具层始终在分支 **`orange-pi-5-pro-imx415-90fps`** 下操作
+- 内核源码：<https://github.com/WanPublic/linux-rockchip/>，按需切换分支
+- **不要写新脚本**：直接改文件、直接终端执行命令
+
+## 编译前
+
+1. 每次切到新分支编译前，必须修改 **`config/suites/noble.sh`**
+2. 先 **commit 到当前分支**，再执行编译：
+   ```bash
+   sudo ./build.sh --board=orangepi-5-pro --suite=noble --kernel-only
+   ```
+
+## 交流与代码
+
+- 使用 **中文** 反馈与展示思考过程
+- 每次对话 **use context7**（检索文档与示例）
+- 代码修改须 **加注释**；若已有注释，先读取再更新，用注释记录修改历史

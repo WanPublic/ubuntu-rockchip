@@ -10,7 +10,8 @@ export RELASE_VERSION="24.04"
 export KERNEL_REPO="https://github.com/WanPublic/linux-rockchip.git"
 # 2026-01-17: 切换到 orange-pi-5-plus-imx415-4k-90fps-singleisp 分支进行内核编译
 # 2026-01-30: 手动修改 rk3588-orangepi-5-plus-camera1.dtsi 重新编译一版
-export KERNEL_BRANCH="orange-pi-5-plus-imx415-1080P-90ps-singleisp"
+# 2026-04-20: 新设备 Orange Pi 5 Pro 内核制作，切换到 pro 专用分支。
+export KERNEL_BRANCH="orange-pi-5-pro-imx415-1080P-90ps-singleisp"
 export KERNEL_FLAVOR="rockchip"
 
 export EXTRA_PPAS="jjriek/rockchip jjriek/rockchip-multimedia"

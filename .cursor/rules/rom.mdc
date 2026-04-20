@@ -1,6 +1,6 @@
 ---
 description: ROM 构建与开发规范（Orange Pi 5 Plus / Noble）
-alwaysApply: true
+alwaysApply: false
 ---
 
 # ROM 构建与开发规范
