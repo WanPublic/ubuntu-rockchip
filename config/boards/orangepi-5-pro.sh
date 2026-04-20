@@ -6,7 +6,7 @@ export BOARD_SOC="Rockchip RK3588S"
 export BOARD_CPU="ARM Cortex A76 / A55"
 export UBOOT_PACKAGE="u-boot-radxa-rk3588"
 export UBOOT_RULES_TARGET="orangepi-5-pro-rk3588s"
-export COMPATIBLE_SUITES=("jammy" "noble" "oracular" "plucky")
+export COMPATIBLE_SUITES=("jammy" "noble")
 export COMPATIBLE_FLAVORS=("server" "desktop")
 
 function config_image_hook__orangepi-5-pro() {
@@ -27,13 +27,16 @@ function config_image_hook__orangepi-5-pro() {
         # Install the rockchip camera engine
         chroot "${rootfs}" apt-get -y install camera-engine-rkaiq-rk3588
 
-        # Fix WiFi not working when bluetooth enabled for the official RTL8852BE WiFi + BT card
-        mkdir -p "${rootfs}"/usr/lib/scripts
-        cp "${overlay}/usr/lib/systemd/system/rtl8852be-reload.service" "${rootfs}/usr/lib/systemd/system/rtl8852be-reload.service"
-        cp "${overlay}/usr/lib/scripts/rtl8852be-reload.sh" "${rootfs}/usr/lib/scripts/rtl8852be-reload.sh"
-        chroot "${rootfs}" systemctl enable rtl8852be-reload
+        # Enable bluetooth
+        cp "${overlay}/usr/bin/brcm_patchram_plus" "${rootfs}/usr/bin/brcm_patchram_plus"
+        cp "${overlay}/usr/lib/systemd/system/ap6256s-bluetooth.service" "${rootfs}/usr/lib/systemd/system/ap6256s-bluetooth.service"
+        chroot "${rootfs}" systemctl enable ap6256s-bluetooth
 
-        # Install wiring orangepi package
+        # Unbind SDIO device before reboot
+        cp "${overlay}/usr/lib/systemd/system/ap6256-reboot.service" "${rootfs}/usr/lib/systemd/system/ap6256-reboot.service"
+        chroot "${rootfs}" systemctl enable ap6256-reboot.service
+
+        # Install wiring orangepi package 
         chroot "${rootfs}" apt-get -y install wiringpi-opi libwiringpi2-opi libwiringpi-opi-dev
         echo "BOARD=orangepi5pro" > "${rootfs}/etc/orangepi-release"
     fi
